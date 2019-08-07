@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 06 16:45:34 2019
-
-@author: panch
-"""
 
 from matplotlib.pylab import *
 
