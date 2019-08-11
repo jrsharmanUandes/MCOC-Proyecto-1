@@ -18,14 +18,13 @@ u0 = fun_u0(x)
  #Creo el vector u para tiempo k
 u_k = u0.copy()
 
+
 #condiciones de borde
-u_k[0] = 0.
+u_k[0] = 20.
 u_k[n] = 20.
 
 #tEMPERATURA EN EL TIEMPO K+1 
 u_km1 = u_k.copy()
-
-
 
 #Parametros de la barra (hierro)
 dt = 1.  #s
@@ -48,20 +47,22 @@ k= 0
 
 for k in range(10000):
     t = dt*k
-    print "k = ", k, "t = ",t
+    #print "k = ", k, "t = ",t
     
     #condiciones de borde
     #u_k[0] = 0.
-    u_k[n] = 20.
+    #u_k[n] = 20.
     
     # Loop en el espacio i = 1  ... n - 1 por las condiciones de borde
     for i in range(1,n):
         #algoritmo de diferencias finitas  1-D para difusion
         u_km1[i]= u_k[i] + alpha*(u_k[i+1]-2*u_k[i]+u_k[i-1])
     # avanza la solucion a k +1
+    #print u_km1[0]
     u_k = u_km1
     if k % 200 == 0:
         plot(x,u_k)
 
+show()
 
 title("k = {} t = {} s".format(k, k*dt))
