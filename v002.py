@@ -26,11 +26,11 @@ u_k[n] = 20.
 #tEMPERATURA EN EL TIEMPO K+1 
 u_km1 = u_k.copy()
 
-#Parametros de la barra (hierro)
+#Parametros de la barra (hormigon)
 dt = 1.  #s
-K = 79.5 # m^2 / s
-c = 450. # J / kg C
-rho = 7800. # kg/ m^3
+K = 9.5 # m^2 / s
+c = 880. # J / kg C
+rho = 2400. # kg/ m^3
 alpha = K*dt/(c*rho*dx**2)
 
 print "dt = ",dt 
