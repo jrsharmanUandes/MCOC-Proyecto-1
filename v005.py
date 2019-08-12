@@ -62,6 +62,7 @@ for k in range(4000):
     
     # Loop en el espacio i = 1  ... n - 1 por las condiciones de borde
     for i in range(0,n+1):
+            
         if i == n :
             u_km1[i]= u_k[i] + alpha*(-u_k[i]+u_k[i-1])
         elif i == 0 :
@@ -70,9 +71,13 @@ for k in range(4000):
             u_km1[i]= u_k[i] + alpha*(u_k[i+1]-2*u_k[i]+u_k[i-1])   #algoritmo de diferencias finitas  1-D para difusion
             
             
+            
     # avanza la solucion a k +1
     u_k = u_km1
     if k % 200 == 0:    #Plotea cierta cantidad de lineas
+        
+        print sum(u_k*dx)  #Area bajo la curva (demuestra que el calor se mantiene constante en el tiempo)
+        
         plot(x,u_k)
 
 
