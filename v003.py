@@ -45,7 +45,7 @@ plot(x,u0,"k--")
 #Loop en el tiempo
 k= 0
 
-for k in range(10000):
+for k in range(100000):
     t = dt*k
     #print "k = ", k, "t = ",t
     
@@ -60,7 +60,7 @@ for k in range(10000):
     # avanza la solucion a k +1
     #print u_km1[0]
     u_k = u_km1
-    if k % 200 == 0:
+    if k % 1000 == 0:
         plot(x,u_k)
 
 show()

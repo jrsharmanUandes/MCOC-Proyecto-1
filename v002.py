@@ -23,12 +23,12 @@ u_k = u0.copy()
 u_k[0] = 0.
 u_k[n] = 20.
 
-#tEMPERATURA EN EL TIEMPO K+1 
+#Temperatura en tiempo k+1
 u_km1 = u_k.copy()
 
 #Parametros de la barra (hormigon)
 dt = 1.  #s
-K = 9.5 # m^2 / s
+K = 1.63 # m^2 / s
 c = 880. # J / kg C
 rho = 2400. # kg/ m^3
 alpha = K*dt/(c*rho*dx**2)
@@ -45,7 +45,7 @@ plot(x,u0,"k--")
 #Loop en el tiempo
 k= 0
 
-for k in range(10000):
+for k in range(500000):
     t = dt*k
     #print "k = ", k, "t = ",t
     
@@ -60,7 +60,7 @@ for k in range(10000):
     # avanza la solucion a k +1
     #print u_km1[0]
     u_k = u_km1
-    if k % 200 == 0:
+    if k % 10000 == 0:
         plot(x,u_k)
 
 show()
