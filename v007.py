@@ -41,7 +41,7 @@ plot(x,u_k,"k--")
 #Loop en el tiempo
 k= 0
 
-for k in range(4000):
+for k in range(4500):
     t = dt*k
     
     #condiciones de borde
@@ -68,5 +68,5 @@ for k in range(4000):
         plot(x,u_k)
 
 
-title("k = {} t = {} s".format(k, k*dt))
+title("k = {} t = {} s".format(k, k*dt),size=30)
 show()
