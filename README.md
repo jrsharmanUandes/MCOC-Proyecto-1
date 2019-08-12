@@ -6,5 +6,5 @@ La distribución de tareas se puede encontrar en [Trello](https://trello.com/b/o
 correspondiente a la entrega 2.
 
 ### Informe
-El informe del proyecto se encuentra en el siguiente [Link](https://docs.google.com/document/d/1GYiq_QaNTlSr4hZRMUYyQBtQ69j_RceQEw9vZ5zCAGg/edit#),
+El informe del proyecto se encuentra en el siguiente [Link](https://docs.google.com/document/d/1GYiq_QaNTlSr4hZRMUYyQBtQ69j_RceQEw9vZ5zCAGg/edit?usp=sharing),
 correspondiente a la entrega 3.
