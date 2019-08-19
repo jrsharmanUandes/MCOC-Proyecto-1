@@ -42,13 +42,11 @@ def imshowbien(u):
 	imshow(u.T[Nx::-1,:])
 
 
-
-
-#Parametros del problema (hierro)
+#Parametros de la barra (hormigon)
 dt = 1.  #s
-K = 79.5 # m^2 / s
-c = 450. # J / kg C
-rho = 7800. # kg/ m^3
+K = 1.63 # m^2 / s
+c = 880. # J / kg C
+rho = 2400. # kg/ m^3
 alpha = K*dt/(c*rho*dx**2)
 
 print "dt = ",dt 
@@ -57,28 +55,32 @@ print "K = ",K
 print "c = ",c
 print "rho = ",rho
 print "alpha = ",alpha
-
+k_max=1000
 k= 0
 
-figure(1)
+#figure(1)
+#imshowbien(u_k)
+#title("k = {} t = {} s".format(k, k*dt))
+#show()
 imshowbien(u_k)
 title("k = {} t = {} s".format(k, k*dt))
-
+savefig("movie/frame_{0:04.0f}.png".format(k)) #guardo frame
+close(1)
 #Loop en el tiempo
 
-for k in range(1000):
+for k in range(k_max):
     t = dt*k
-    #print "k = ", k, "t = ",t
     
-    #condiciones de borde
-    u_k[0,:] = 20.
-    u_k[:,0] = 20.
-    
-    # Loop en el espacio i = 1  ... n - 1 u_km1[0] = 0 u_km1[n] =  por las condiciones de borde
-    for i in range(1,Nx): #estaba Nx-1
-    	for j in range(1,Ny): #estaba Ny-1
-	        #algoritmo de diferencias finitas  2-D para difusion
+    if k <= k_max/4: #solo 
+	    u_k[0,:-1] += 0.61
+	    u_k[:,0] += 0.61
+    u_k[0,0] = u_k[1,0]
 
+
+    # Loop en el espacio i = 1  ... n - 1 u_km1[0] = 0 u_km1[n] =  por las condiciones de borde
+    for i in range(0,Nx): #estaba Nx-1
+    	for j in range(0,Ny): #estaba Ny-1
+	        #algoritmo de diferencias finitas  2-D para difusion
 	        #Laplaciano
 	        nabla_u_k = (u_k[i-1,j] + u_k[i+1,j] + u_k[i,j-1] + u_k[i,j+1] - 4*u_k[i,j])/(h**2)
 
@@ -92,12 +94,18 @@ for k in range(1000):
     # avanza la solucion a k +1
     
     u_k = u_km1
+    imshowbien(u_k)
+    title("k = {} t = {} s".format(k, k*dt))
+    
+    savefig("movie/frame_{0:04.0f}.png".format(k)) #guardo frame
+	
 
-figure(2)
-imshowbien(u_k)
-title("k = {} t = {} s".format(k, k*dt))
+#printbien(u_k)
+#figure(2)
+#imshowbien(u_k)
+#title("k = {} t = {} s".format(k, k*dt))
     #if k % 200 == 0:
     #   plot(x,u_k)
 
-show()
+#show()
 
