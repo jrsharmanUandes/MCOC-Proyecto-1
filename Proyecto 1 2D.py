@@ -65,6 +65,7 @@ k= 0
 imshowbien(u_k)
 title("k = {} t = {} s".format(k, k*dt))
 savefig("movie/frame_{0:04.0f}.png".format(k)) #guardo frame
+colorbar()
 close(1)
 #Loop en el tiempo
 
@@ -96,16 +97,10 @@ for k in range(k_max):
     u_k = u_km1
     imshowbien(u_k)
     title("k = {} t = {} s".format(k, k*dt))
-    
+    colorbar()
     savefig("movie/frame_{0:04.0f}.png".format(k)) #guardo frame
+    close(1)
 	
 
-#printbien(u_k)
-#figure(2)
-#imshowbien(u_k)
-#title("k = {} t = {} s".format(k, k*dt))
-    #if k % 200 == 0:
-    #   plot(x,u_k)
 
-#show()
 
