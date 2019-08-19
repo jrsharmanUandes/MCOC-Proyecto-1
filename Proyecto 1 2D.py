@@ -3,8 +3,8 @@ from matplotlib.pylab import *
 
 a = 1. #Ancho del dominio
 b = 1. #Largo del dominio
-Nx = 6 #Numero de intervalos en x
-Ny = 6 #Numero de intervalos en x
+Nx = 10 #Numero de intervalos en x
+Ny = 10 #Numero de intervalos en x
 
 dx = b/Nx # discretizacion espacial en x
 dy = a/Ny # discretizacion espacial en y
@@ -41,10 +41,7 @@ print u_k
 def imshowbien(u):
 	imshow(u.T[Nx::-1,:])
 
-figure()
-imshowbien(u_k)
-colorbar()
-show()
+
 
 
 #Parametros del problema (hierro)
@@ -69,7 +66,7 @@ title("k = {} t = {} s".format(k, k*dt))
 
 #Loop en el tiempo
 
-for k in range(100):
+for k in range(1000):
     t = dt*k
     #print "k = ", k, "t = ",t
     
@@ -78,12 +75,12 @@ for k in range(100):
     u_k[:,0] = 20.
     
     # Loop en el espacio i = 1  ... n - 1 u_km1[0] = 0 u_km1[n] =  por las condiciones de borde
-    for i in range(1,Nx-1):
-    	for j in range(1,Ny-1):
+    for i in range(1,Nx): #estaba Nx-1
+    	for j in range(1,Ny): #estaba Ny-1
 	        #algoritmo de diferencias finitas  2-D para difusion
 
 	        #Laplaciano
-	        nabla_u_k = (u_k[i-1,j] + u_k[i+1,j] + u_k[i,j-1] + u_k[i,j+1] - 4*u_k[i,j])/h
+	        nabla_u_k = (u_k[i-1,j] + u_k[i+1,j] + u_k[i,j-1] + u_k[i,j+1] - 4*u_k[i,j])/(h**2)
 
 	        #Forward euler
 	        u_km1[i,j] = u_k[i,j] + alpha*nabla_u_k
