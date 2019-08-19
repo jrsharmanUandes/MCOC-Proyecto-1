@@ -29,7 +29,7 @@ u_km1 = zeros((Nx+1,Ny+1),dtype=double)
 
 #CB esencial
 u_k[0,:] = 20.
-u_km1[:,0] = 20.
+u_k[:,0] = 20.
 
 
 #Funciones para facilitar 
@@ -39,7 +39,7 @@ def printbien(u):
 print u_k
 
 def imshowbien(u):
-	imshow(u.T[Nx::,-1,:])
+	imshow(u.T[Nx::-1,:])
 
 figure()
 imshowbien(u_k)
@@ -61,29 +61,46 @@ print "c = ",c
 print "rho = ",rho
 print "alpha = ",alpha
 
-plot(x,u0,"k--")
-
-#Loop en el tiempo
 k= 0
 
-for k in range(10000):
+figure(1)
+imshowbien(u_k)
+title("k = {} t = {} s".format(k, k*dt))
+
+#Loop en el tiempo
+
+for k in range(100):
     t = dt*k
     #print "k = ", k, "t = ",t
     
     #condiciones de borde
-    u_k[0] = 0.
-    u_k[n] = 20.
+    u_k[0,:] = 20.
+    u_k[:,0] = 20.
     
-    # Loop en el espacio i = 1  ... n - 1 por las condiciones de borde
-    for i in range(1,n):
-        #algoritmo de diferencias finitas  1-D para difusion
-        u_km1[i]= u_k[i] + alpha*(u_k[i+1]-2*u_k[i]+u_k[i-1])
+    # Loop en el espacio i = 1  ... n - 1 u_km1[0] = 0 u_km1[n] =  por las condiciones de borde
+    for i in range(1,Nx-1):
+    	for j in range(1,Ny-1):
+	        #algoritmo de diferencias finitas  2-D para difusion
+
+	        #Laplaciano
+	        nabla_u_k = (u_k[i-1,j] + u_k[i+1,j] + u_k[i,j-1] + u_k[i,j+1] - 4*u_k[i,j])/h
+
+	        #Forward euler
+	        u_km1[i,j] = u_k[i,j] + alpha*nabla_u_k
+
+
+    #CB natural
+    u_km1[Nx,:] = u_km1[Nx-1,:]
+    u_km1[:,Ny] = u_km1[:,Ny-1]
     # avanza la solucion a k +1
-    #print u_km1[0]
+    
     u_k = u_km1
-    if k % 200 == 0:
-        plot(x,u_k)
+
+figure(2)
+imshowbien(u_k)
+title("k = {} t = {} s".format(k, k*dt))
+    #if k % 200 == 0:
+    #   plot(x,u_k)
 
 show()
 
-title("k = {} t = {} s".format(k, k*dt))
