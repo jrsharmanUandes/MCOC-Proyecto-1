@@ -72,6 +72,10 @@ n = 0
 
 T = 24*3600 #perioddo
 
+#CB inicial
+u_n[:,:,:] = 20.
+
+
 #Creo imagen
 imshowbien(u_n[:,:,0])
 title("Cara expuesta al ambiente\nk = {} t = {}".format(n, tiempo(n*dt)))
@@ -80,8 +84,7 @@ savefig("movie/frame_{0:05.0f}.png".format(n)) #guardo frame
 close(1)
 
 
-#CB inicial
-u_n[:,:,:] = 20.
+
 
 
 #Loop en el tiempo
