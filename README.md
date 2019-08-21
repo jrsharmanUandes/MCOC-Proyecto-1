@@ -8,6 +8,3 @@ correspondiente a la entrega 2.
 ### Informe
 El informe del proyecto se encuentra en [Google Drive](https://docs.google.com/document/d/1GYiq_QaNTlSr4hZRMUYyQBtQ69j_RceQEw9vZ5zCAGg/edit?usp=sharing),
 correspondiente a la entrega 3.
-
-(https://docs.google.com/document/d/1KH8ark5Dt0878Dy1s4w6Pu39A2fXMa2h-rabTN23F1c/edit?usp=sharing),
-correspondiente a la entrega 5.
