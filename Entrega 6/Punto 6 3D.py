@@ -180,7 +180,7 @@ for n in range(n_max):
     u_n = u_nm1
     if n % 120 == 0:
         x.append(n*dt)
-        y.append(u_n[Nx/2,Ny/2,-1])
+        y.append(u_n[Nx/2,Ny/2,Ny])
         '''
         #Creo imagen
         #imshowbien(u_n[Nx/2,:,:])
@@ -194,7 +194,7 @@ plt.plot(x,y)
 title("Punto 6",size=30)
 xlabel("Tiempo en minutos")
 ylabel("Temeperatura Celsius")
-savefig("movie/grafico.png")
+savefig("movie/Punto 6.png")
 show()
     
 
