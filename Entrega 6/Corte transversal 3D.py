@@ -1,13 +1,55 @@
+from scipy.interpolate import InterpolatedUnivariateSpline
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime
+import csv
 
 from matplotlib.pylab import *
 
-def tiempo(s):
-    d = int(s/(24*60*60.))
-    h = int((s%(24*60*60.))/(60*60.))
-    m = int(((s%(24*60*60.))%(60*60.))/60.)
-    s = int(((s%(24*60*60.))%(60*60.))%60.)
+with open('Tempmin.csv', 'rb') as f: #abrimos el csv
+	reader = csv.reader(f)
+	temperatura = list(reader)
+
+temp1 = []
+minutos1 = []
+
+for dato in temperatura:
+	temp1.append(float(dato[0]))
+	minutos1.append(float(dato[1])-float(temperatura[0][1]))
+
+print temp1[0]
+print minutos1[0]
+
+#funcion interpolado para todos los minutos
+f_interp = InterpolatedUnivariateSpline(minutos1,temp1,k=3)
+
+ #listas para guardar l
+temp2=[]
+minutos2=[]
+
+for i in range(int(minutos1[-1])):
+	temp2.append(i)
+	minutos2.append(float(f_interp(i)))
+
+
+
+#funcion Q(t) para el hormigon
+def q_t(t):                                         # Define como se comporta q_t durante el tiempo
+    tiempo = t/3600.                                # Transforma el tiempo en segundos a horas
+    if tiempo < 7:                                # Dado que el comportamiento de la funcion es distinto en las primeras 10 horas comprueba si se encuentra en este periodo
+        return (1.0347 * 2 * tiempo - 3.1016)/3600  # Ecuacion de q_t dentro de las primeras 10 horas
+    else:                                           # Despues de las primeras dies horas se comporta de esta forma
+        return (98.845 / tiempo)/3600       # Ecuacion de q_t despues de las 10 horas
+
+# hacemos una funcion para el tiempo
+def tiempo(s):                                      # Define la funcion tiempo para graficar DDHHMMSS
+    d = int(s/(24*60*60.))                          # La cantidad de dias
+    h = int((s%(24*60*60.))/(60*60.))               # El resto de los dias para calcular las horas restantes
+    m = int(((s%(24*60*60.))%(60*60.))/60.)         # El resto de las horas para calcular los minutos restantes
+    s = int(((s%(24*60*60.))%(60*60.))%60.)         # El resto de los minutos son los segudnos
     
     return '{} d {} h {} m {} s '.format(d,h,m,s)
+
 
 a = 1. #Ancho del dominio
 b = 1. #Largo del dominio
@@ -47,7 +89,7 @@ def printbien(u):
 
 
 def imshowbien(u):
-	imshow(u.T[Nx::-1,:],vmin=10,vmax=30)
+	imshow(u.T[Nx::-1,:],vmin=10)
 
 
 #Parametros del bloque (hormigon)
@@ -67,7 +109,7 @@ print "rho = ",rho
 print "alpha = ",alpha
 
 
-n_max=24*60#*7 # intervalos 
+n_max=24*60*14#*7 # intervalos 
 n = 0
 
 T = 24*3600 #perioddo
@@ -77,8 +119,8 @@ u_n[:,:,:] = 20.
 
 
 #Creo imagen
-imshowbien(u_n[:,:,0])
-title("Cara expuesta al ambiente\nk = {} t = {}".format(n, tiempo(n*dt)))
+imshowbien(u_n[Nx/2,:,:])
+title("Corte transversal\nk = {} t = {}".format(n, tiempo(n*dt)))
 colorbar()
 savefig("movie/frame_{0:05.0f}.png".format(n)) #guardo frame
 close(1)
@@ -86,12 +128,11 @@ close(1)
 
 
 
-
 #Loop en el tiempo
 for n in range(n_max):
     t = dt*n
-    
-    u_ambiente = 20. + 10.*sin((2*pi/T)*t)
+    if n % 60 == 0:
+    	u_ambiente = temp2[n/60]
 
     # CB esenciales
     #u_n[-1,:] = 20.
@@ -110,7 +151,7 @@ for n in range(n_max):
     	        nabla_u_n = (u_n[i+1,j,k] + u_n[i-1,j,k] + u_n[i,j+1,k] + u_n[i,j-1,k] +u_n[i,j,k+1] + u_n[i,j,k-1] - 6*u_n[i,j,k])/(h**2)
 
     	        #Forward euler
-    	        u_nm1[i,j,k] = u_n[i,j,k] + alpha*nabla_u_n
+    	        u_nm1[i,j,k] = u_n[i,j,k] + alpha*nabla_u_n + q_t(n)
 
 
 
@@ -123,9 +164,9 @@ for n in range(n_max):
     u_nm1[:,:,Nz] = u_nm1[:,:,Nz-1]
     
     u_n = u_nm1
-    if n % 5 == 0:
-	    imshowbien(u_n[:,:,0])
-	    title("Cara expuesta al ambiente\nn = {} t = {}".format(n, tiempo(n*dt)))
+    if n % 60 == 0:
+	    imshowbien(u_n[Nx/2,:,:])
+	    title("Corte transversal\nn = {} t = {}".format(n, tiempo(n*dt)))
 	    colorbar()
 	    savefig("movie/frame_{0:05.0f}.png".format(n)) #guardo frame
 	    close(1)
