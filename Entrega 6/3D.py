@@ -73,6 +73,8 @@ def q_t(t):                                             # Define como se comport
         return 0                               
     elif tiempo < 15:                                   # Dado que el comportamiento de la funcion es distinto en las primeras 10 horas comprueba si se encuentra en este periodo
         return ((1.0347 * 2 * tiempo - 3.1016)/60.**2)*razon  # Ecuacion de q_t dentro de las primeras 10 horas
+    elif tiempo >= 15 and tiempo < 19:					# en este intervalo la curva empieza a cambiar de forma no t
+    	return (-1.0762 * tiempo +26.471)*razon/3600.
     elif -0.1234*t + 7.7239 >= 0:                       # Verifica de que q(t) no sea negativo (Esto es dado que la ecuacion es lineal y en algun momento se torna negativa)
                                                         # Despues de las primeras dies horas se comporta de esta forma
         return ((-0.1234*t + 7.7239)/60.**2)*razon      # Ecuacion de q_t despues de las 10 horas

@@ -1,24 +1,22 @@
+#Se importa las librerias necesarias
 from scipy.interpolate import InterpolatedUnivariateSpline
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 import csv
-
 from matplotlib.pylab import *
 
-with open('Tempmin.csv', 'rb') as f: #abrimos el csv
+with open('Tempmin.csv', 'rb') as f: #abrimos el csv con la temperatura ambiente
 	reader = csv.reader(f)
 	temperatura = list(reader)
 
 temp1 = []
 minutos1 = []
 
+# se ordena los datos
 for dato in temperatura:
 	temp1.append(float(dato[0]))
 	minutos1.append(float(dato[1])-float(temperatura[0][1]))
-
-print temp1[0]
-print minutos1[0]
 
 #funcion interpolado para todos los minutos
 f_interp = InterpolatedUnivariateSpline(minutos1,temp1,k=3)
@@ -27,6 +25,7 @@ f_interp = InterpolatedUnivariateSpline(minutos1,temp1,k=3)
 temp2=[]
 minutos2=[]
 
+#Se crea la lista de temperatura que usaremos
 for i in range(int(minutos1[-1])):
 	minutos2.append(i)
 	temp2.append(float(f_interp(i)))
@@ -73,6 +72,8 @@ def q_t(t):                                             # Define como se comport
         return 0                               
     elif tiempo < 15:                                   # Dado que el comportamiento de la funcion es distinto en las primeras 10 horas comprueba si se encuentra en este periodo
         return ((1.0347 * 2 * tiempo - 3.1016)/60.**2)*razon  # Ecuacion de q_t dentro de las primeras 10 horas
+    elif tiempo >= 15 and tiempo < 19:					# en este intervalo la curva empieza a cambiar de forma no t
+    	return (-1.0762 * tiempo +26.471)*razon/3600.
     elif -0.1234*t + 7.7239 >= 0:                       # Verifica de que q(t) no sea negativo (Esto es dado que la ecuacion es lineal y en algun momento se torna negativa)
                                                         # Despues de las primeras dies horas se comporta de esta forma
         return ((-0.1234*t + 7.7239)/60.**2)*razon      # Ecuacion de q_t despues de las 10 horas
@@ -135,25 +136,15 @@ n_max=24*60*60*13   # Tiempo a analizar en s [13 dias]
 #CB inicial
 u_n[:,:,:] = 20.
 
-#guardo para graficarffmpeg -i foto_%03d.png final.mp4
+#Guardo para graficar
 x=[]
 y1=[]
 y2=[]
 y3=[]
 y4=[]
-#Contador
+
+#Contador para ordenar los frames
 contador= 0
-
-'''
-#Creo imagen
-imshowbien(u_n[Nx/2,:,:])
-title("Corte transversal\nk = {} t = {}".format(n, tiempo(n*dt)))
-colorbar()
-savefig("movie/frame_{0:05.0f}.png".format(n)) #guardo frame
-close(1)
-'''
-
-
 
 #Loop en el tiempo
 for n in range(n_max):
@@ -163,12 +154,6 @@ for n in range(n_max):
     		u_ambiente = temp2[n/60]
     	except:
     		break
-
-    # CB esenciales
-    #u_n[-1,:] = 20.
-    #u_n[0,:] = 20.
-    #u_n[:,0] = 20.
-
     
     # Loop en el espacio i = 1  ... n - 1 u_nm1[0] = 0 u_nm1[n] =  por las condiciones de borde
     for i in range(1,Nx): 
@@ -222,9 +207,10 @@ plt.plot(x,y3, label="Puntos 1, 4, 7")
 plt.plot(x,y4, label="Punto en la superficie")
 
 title("Temperatura",size=30)
-xlabel("Tiempo en minutos")
+xlabel("Tiempo en dias")
 ylabel("Temperatura Celsius")
 ylim(20)
+xlim(0,14)
 legend(loc="upper right")
 savefig("movie/grafico.png")
 show()
