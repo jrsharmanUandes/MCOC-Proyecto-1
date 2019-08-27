@@ -7,15 +7,15 @@ import csv
 from matplotlib.pylab import *
 
 with open('Tempmin.csv', 'rb') as f: #abrimos el csv
-	reader = csv.reader(f)
-	temperatura = list(reader)
+    reader = csv.reader(f)
+    temperatura = list(reader)
 
 temp1 = []
 minutos1 = []
 
 for dato in temperatura:
-	temp1.append(float(dato[0]))
-	minutos1.append(float(dato[1])-float(temperatura[0][1]))
+    temp1.append(float(dato[0]))
+    minutos1.append(float(dato[1])-float(temperatura[0][1]))
 
 print temp1[0]
 print minutos1[0]
@@ -28,8 +28,8 @@ temp2=[]
 minutos2=[]
 
 for i in range(int(minutos1[-1])):
-	minutos2.append(i)
-	temp2.append(float(f_interp(i)))
+    minutos2.append(i)
+    temp2.append(float(f_interp(i)))
 
 
 # hacemos una funcion para el tiempo
@@ -59,8 +59,8 @@ dz = c/Nz # discretizacion espacial en z
 h = dx  # = dy = dz
 
 if dx != dy or dx != dz or dy != dz: # asumimos en formula
-	print('ERROR!!!!! dx != dy or dx != dz or dy != dz')
-	exit(-1)
+    print('ERROR!!!!! dx != dy or dx != dz or dy != dz')
+    exit(-1)
 
 razon = 496.7*10/(Nx**3) #cantidad de gramos por cada dicretizacion(496.7 gramos/m^3)
 print "asd",razon
@@ -94,12 +94,12 @@ u_nm1 = zeros((Nx+1,Ny+1,Nz+1),dtype=double)
 
 #Funciones para facilitar 
 def printbien(u):
-	print u.T[Nx::-1,:]
+    print u.T[Nx::-1,:]
 
 
 
 def imshowbien(u):
-	imshow(u.T[:,Ny::-1],vmin=20,vmax=80)#imshow(u.T[Nx::-1,:],vmin=20,vmax=80) # saque el .T
+    imshow(u.T[:,Ny::-1],vmin=20,vmax=80)#imshow(u.T[Nx::-1,:],vmin=20,vmax=80) # saque el .T
 
 
 #Parametros del bloque (hormigon)
@@ -129,8 +129,16 @@ u_n[:,:,:] = 20.
 
 #guardo para graficarffmpeg -i foto_%03d.png final.mp4
 x=[]
-y=[]
-
+y1=[]
+y2=[]
+y3=[]
+y4=[]
+y5=[]
+y6=[]
+y7=[]
+y8=[]
+y9=[]
+y10=[]
 
 '''
 #Creo imagen
@@ -147,7 +155,7 @@ close(1)
 for n in range(n_max):
     t = dt*n
     if n % 60 == 0:
-    	u_ambiente = temp2[n/60]
+        u_ambiente = temp2[n/60]
 
     # CB esenciales
     #u_n[-1,:] = 20.
@@ -158,15 +166,15 @@ for n in range(n_max):
     
     # Loop en el espacio i = 1  ... n - 1 u_nm1[0] = 0 u_nm1[n] =  por las condiciones de borde
     for i in range(1,Nx): 
-    	for j in range(1,Ny): 
+        for j in range(1,Ny): 
             for k in range(1,Nz):
-    	        
+                
                 #algoritmo de diferencias finitas  3-D para difusion
-    	        #Laplaciano
-    	        nabla_u_n = (u_n[i+1,j,k] + u_n[i-1,j,k] + u_n[i,j+1,k] + u_n[i,j-1,k] +u_n[i,j,k+1] + u_n[i,j,k-1] - 6*u_n[i,j,k])/(h**2)
+                #Laplaciano
+                nabla_u_n = (u_n[i+1,j,k] + u_n[i-1,j,k] + u_n[i,j+1,k] + u_n[i,j-1,k] +u_n[i,j,k+1] + u_n[i,j,k-1] - 6*u_n[i,j,k])/(h**2)
 
-    	        #Forward euler
-    	        u_nm1[i,j,k] = u_n[i,j,k] + alpha*nabla_u_n + q_t(n)
+                #Forward euler
+                u_nm1[i,j,k] = u_n[i,j,k] + alpha*nabla_u_n + q_t(n)
                 
  
 
@@ -178,9 +186,19 @@ for n in range(n_max):
     u_nm1[:,:,Nz] = u_nm1[:,:,Nz-1]
     
     u_n = u_nm1
-    if n % 120 == 0:
-        x.append(n*dt)
-        y.append(u_n[Nx/2,Ny/2,Ny])
+    if n % 60 == 0:
+        x.append(n)
+        y1.append(u_n[Nx/2,0,1])
+        y2.append(u_n[Nx/2,0,Nz/2])
+        y3.append(u_n[Nx/2,0,Nz])
+        y4.append(u_n[Nx/2,Ny/2,1])
+        y5.append(u_n[Nx/2,Ny/2,Nz/2])
+        y6.append(u_n[Nx/2,Ny/2,Nz])
+        y7.append(u_n[Nx-1,0,1])
+        y8.append(u_n[Nx-1,0,Nz/2])
+        y9.append(u_n[Nx-1,0,Nz])
+        y10.append(u_ambiente)
+
         '''
         #Creo imagen
         #imshowbien(u_n[Nx/2,:,:])
@@ -189,13 +207,23 @@ for n in range(n_max):
         #savefig("movie/frame_{0:05.0f}.png".format(n)) #guardo frame
         #close(1)
         '''
-plt.plot(x,y)
+#plt.plot(x,y1, label = "Punto 1")
+plt.plot(x,y4, label = "Punto 1, 4, 7")
+plt.plot(x,y2, label = "Punto 2, 5, 8")
+plt.plot(x,y3, label = "Punto 3, 6, 9")
+#plt.plot(x,y4, label = "Punto 1, 4, 7")
+#plt.plot(x,y5, label = "Punto 5")
+#plt.plot(x,y6, label = "Punto 6")
+#plt.plot(x,y7, label = "Punto 7")
+#plt.plot(x,y8, label = "Punto 8")
+#plt.plot(x,y9, label = "Punto 9")
+plt.plot(x,y10, label = "Ambiente")
 
-title("Punto 6",size=30)
+title("Temperatura",size=30)
 xlabel("Tiempo en minutos")
-ylabel("Temeperatura Celsius")
+ylabel("Temperatura Celsius")
+legend(loc='upper right')
+ylim(20)
 savefig("movie/Punto 6.png")
 show()
     
-
-
